@@ -1,0 +1,12 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="fonts\fonts.lua" />
+    <Script file="textures\textures.lua" />
+    <Script file="src\Constants.lua" />
+    <Script file="src\Helpers.lua" />
+    <Script file="src\Actions.lua" />
+    <Script file="src\Reducers.lua" />
+    <Script file="src\frames\PlayerFrame.lua" />
+    <Script file="src\frames\TargetFrame.lua" />
+    <Include file="src\frames\bars\Bars.xml"/>
+    <Include file="src\frames\Text\Text.xml"/>
+</Ui>

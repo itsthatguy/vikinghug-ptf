@@ -1,0 +1,7 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+  <Script file="BaseBar.lua"/>
+  <Script file="EnergyBar.lua"/>
+  <Script file="HealthBar.lua"/>
+  <Script file="ManaBar.lua"/>
+  <Script file="RageBar.lua"/>
+</Ui>
