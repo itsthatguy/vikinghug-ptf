@@ -33,9 +33,9 @@ function VHTargetFrame:CreateContainer()
   targetFrameController:SetAttribute("type2", "togglemenu")
 
   -- remove this start
-  local texture = targetFrameController:CreateTexture(nil, "BACKGROUND")
-  texture:SetAllPoints()
-  texture:SetColorTexture(1,1,1,.2)
+  -- local texture = targetFrameController:CreateTexture(nil, "BACKGROUND")
+  -- texture:SetAllPoints()
+  -- texture:SetColorTexture(1,1,1,.2)
   -- remove this end
 
   return targetFrame, targetFrameController
