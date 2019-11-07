@@ -104,9 +104,9 @@ function VHTargetFrame:CreateText()
   textFrame:SetPoint("BOTTOMRIGHT", VH_FRAMES.TARGET_FRAME, "BOTTOM", -40, 15)
 
   textFrame.text = textFrame:CreateFontString("VH_TARGET_TEXT_FRAME")
-  textFrame.text:SetFont(VH_FONTS.FORCED_SQUARE, 22)
+  textFrame.text:SetFont(VH_FONTS.FORCED_SQUARE, 20)
   textFrame.text:SetJustifyH("RIGHT")
-  textFrame.text:SetPoint("BOTTOMRIGHT", "VH_TARGET_TEXT_FRAME", 0, 0)
+  textFrame.text:SetPoint("BOTTOMRIGHT", "VH_TARGET_TEXT_FRAME", 0, 5)
 
   -- local frameTexture = textFrame:CreateTexture(nil, "BACKGROUND")
   -- frameTexture:SetAllPoints()
@@ -149,7 +149,7 @@ end
 -- CLASS ICON
 function VHTargetFrame:CreateClassIcon(parent)
   local classIconFrame = CreateFrame("Frame", "VH_TARGET_CLASS_ICON", parent)
-  classIconFrame:SetPoint("BOTTOMRIGHT", "VH_TARGET_TEXT_FRAME", "BOTTOMLEFT", 0, -20)
+  classIconFrame:SetPoint("BOTTOM", "VH_TARGET_FRAME", "BOTTOM", 0, 0)
   classIconFrame:SetSize(52, 52)
 
 

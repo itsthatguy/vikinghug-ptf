@@ -12,16 +12,34 @@ function VHPlayerFrame:init()
   self.playerPowerTextFrame = self.PlayerPowerText:create()
   self.playerPowerTextFrame:init()
 
+  self:CreateDividers()
   self:CreateMP6()
+  self:CreateCastbar()
+end
+
+function VHPlayerFrame:CreateDividers()
+  local dividerLeftFrame = CreateFrame("Frame", VH_FRAMES.PLAYER_FRAME .. "_DIVIDER_LEFT", UIParent)
+  dividerLeftFrame:SetPoint("TOPRIGHT", VH_FRAMES.PLAYER_FRAME, "TOP", -32, 0)
+  dividerLeftFrame:SetSize(4, 60)
+  local textureLeft = dividerLeftFrame:CreateTexture(nil, "BACKGROUND")
+  textureLeft:SetAllPoints()
+  textureLeft:SetColorTexture(1,1,1,1)
+
+  local dividerRightFrame = CreateFrame("Frame", VH_FRAMES.PLAYER_FRAME .. "_DIVIDER_RIGHT", UIParent)
+  dividerRightFrame:SetPoint("TOPLEFT", VH_FRAMES.PLAYER_FRAME, "TOP", 32, 0)
+  dividerRightFrame:SetSize(4, 60)
+  local textureRight = dividerRightFrame:CreateTexture(nil, "BACKGROUND")
+  textureRight:SetAllPoints()
+  textureRight:SetColorTexture(1,1,1,1)
 end
 
 function VHPlayerFrame:CreateContainer() 
   local playerFrame = CreateFrame("Frame", VH_FRAMES.PLAYER_FRAME, nil)
-  playerFrame:SetPoint("TOP", UIParent, "BOTTOM", 0, 240)
+  playerFrame:SetPoint("TOP", UIParent, "BOTTOM", 0, 200)
   playerFrame:SetSize(900, 30)
 
   local playerFrameController = CreateFrame("Button", VH_FRAMES.PLAYER_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
-  playerFrameController:SetPoint("TOP", UIParent, "BOTTOM", 0, 240)
+  playerFrameController:SetPoint("TOP", UIParent, "BOTTOM", 0, 200)
   playerFrameController:SetSize(500, 30)
 
   playerFrameController:SetAttribute("unit", "player")
@@ -88,6 +106,73 @@ function VHPlayerFrame:CreateEvents(frame)
   frame:RegisterEvent('PLAYER_ENTERING_WORLD')
 end
 
+--
+--
+-- Cast Bar
+-- TODO: MOVE THIS
+--
+function VHPlayerFrame:CreateCastbar()
+  local frameName = "VH_CAST_FRAME"
+  local castFrame = CreateFrame("Frame", frameName, UIParent)
+  castFrame:SetSize(1, 1)
+  castFrame:SetPoint("TOPRIGHT", self.frame, "TOP", -18, 0)
+
+   -- bar
+  castFrame.bar = CreateFrame('StatusBar', "VH_CAST_BAR", castFrame)
+  castFrame.bar:SetPoint("TOPRIGHT", frameName, "TOPRIGHT", 0, 0)
+  
+  -- Style it
+  castFrame.bar:SetSize(10, 60)
+  castFrame.bar:SetStatusBarTexture(VH_TEXTURES.SOLID)
+  castFrame.bar:SetBackdrop({ bgFile = VH_TEXTURES.SOLID })
+  castFrame.bar:SetBackdropColor(ParseColor(VH_COLORS.BG, 0.6))
+  castFrame.bar:SetStatusBarColor(ParseColor(VH_COLORS.YELLOW, 1))
+  
+  castFrame.bar:SetOrientation('VERTICAL')
+  castFrame.bar:SetMinMaxValues(0, 1)
+
+  castFrame.text = castFrame:CreateFontString("VH_CAST_TEXT")
+  castFrame.text:SetFont(VH_FONTS.FORCED_SQUARE, 20)
+  castFrame.text:SetJustifyH("CENTER")
+  castFrame.text:SetPoint("TOP", self.frame, "BOTTOM", 0, -4)
+  castFrame.text:SetText(12345)
+
+  CFT = castFrame.text
+
+  castFrame.nameText = castFrame:CreateFontString("VH_CAST_NAME_TEXT")
+  castFrame.nameText:SetFont(VH_FONTS.FORCED_SQUARE, 32)
+  castFrame.nameText:SetJustifyH("CENTER")
+  castFrame.nameText:SetPoint("TOP", self.frame, "BOTTOM", 0, -30)
+  castFrame.nameText:SetText(12345)
+
+  CNFT = castFrame.nameText
+
+  castFrame:Hide()
+  castFrame.bar:Hide()
+
+  castFrame:RegisterEvent("UNIT_SPELLCAST_START", "player")
+  castFrame:RegisterEvent("UNIT_SPELLCAST_STOP", "player")
+  castFrame:SetScript("OnEvent", function(self, event, arg2, arg, spellID)
+    local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = CastingInfo("player")
+    if (event == "UNIT_SPELLCAST_START") then
+      local duration = (endTimeMS - startTimeMS) / 1000
+      self.bar:SetMinMaxValues(0, duration)
+      self:Show()
+      self.nameText:SetText(name)
+      AnimateGroup("CAST_BAR_ALPHA", {self.bar}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
+      AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value', 0, duration, duration)
+      AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext', 0, duration, duration)
+      AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
+      AnimateGroup("CAST_BAR_TEXT_Y", {self.text}, 'y', -14, -4, 0.1)
+      AnimateGroup("CAST_BAR_NAME_TEXT_Y", {self.nameText}, 'y', -25, -30, 0.15)
+      AnimateGroup("CAST_BAR_NAME_TEXT_HEIGHT", {self.nameText}, 'scale', 0.7, 1, 0.05)
+
+    elseif (event == "UNIT_SPELLCAST_STOP") then
+      AnimateGroup("CAST_BAR_ALPHA", {self.bar}, 'alpha', self.bar:GetAlpha(), 0, 0.25)
+      AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 0, 0.25)
+    end
+  end)
+end
 
 --
 --
@@ -98,14 +183,14 @@ function VHPlayerFrame:CreateMP6()
   local frameName = "VH_MP6_FRAME"
   local mp6Frame = CreateFrame("Frame", frameName, UIParent)
   mp6Frame:SetSize(1, 1)
-  mp6Frame:SetPoint("TOPLEFT", self.frame, "TOP", 20, 0)
+  mp6Frame:SetPoint("TOPLEFT", self.frame, "TOP", 18, 0)
 
    -- bar
   mp6Frame.bar = CreateFrame('StatusBar', "VH_MP6_BAR", mp6Frame)
   mp6Frame.bar:SetPoint("TOPLEFT", frameName, "TOPLEFT", 0, 0)
   
   -- Style it
-  mp6Frame.bar:SetSize(8, 60)
+  mp6Frame.bar:SetSize(10, 60)
   mp6Frame.bar:SetStatusBarTexture(VH_TEXTURES.SOLID)
   mp6Frame.bar:SetBackdrop({ bgFile = VH_TEXTURES.SOLID })
   mp6Frame.bar:SetBackdropColor(ParseColor(VH_COLORS.BG, 0.6))
@@ -113,11 +198,6 @@ function VHPlayerFrame:CreateMP6()
   
   mp6Frame.bar:SetOrientation('VERTICAL')
   mp6Frame.bar:SetMinMaxValues(0, 1)
-
-
-  mp6Frame.running = false
-  mp6Frame.limit = 0.05
-  mp6Frame.endTime = 0
 
   mp6Frame:Hide()
   mp6Frame.bar:Hide()
@@ -131,12 +211,12 @@ function VHPlayerFrame:CreateMP6()
 
       AnimateGroup("MP6_BAR_VALUE", {self.bar}, 'value', 1, 0, 6, function()
         -- Reuse the same animation group name, as to kill the old animation
-        AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 1, 0, 0.5, function()
+        AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 1, 0, 0.15, function()
           self.bar:Hide()
           self:Hide()
         end)
       end)
-      AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 0, 1, 0.5)
+      AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 0, 1, 0.25)
 
     -- NOTE: Why did I have this?
     -- elseif (event == "CURRENT_SPELL_CAST_CHANGED") then
@@ -148,4 +228,4 @@ function VHPlayerFrame:CreateMP6()
   end)
 end
 
-Vikinghug.PlayerFrame = VHPlayerFrame
+  Vikinghug.PlayerFrame = VHPlayerFrame

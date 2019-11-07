@@ -112,6 +112,12 @@ end
 --   - Move to a proper library
 --   - Animation groups should be able to animate multiple properties
 --
+-- EXAMPLE:  
+--   AnimateGroup("CAST_BAR_ALPHA", {
+--     { frame = self.bar, type = 'alpha', startValue = 0, endValue = 1, duration = 0.5, delay = 0 },
+--     { frame = self.text, type = 'alpha', startValue = 0, endValue = 1, duration = 0.5, delay = 0 },
+--     { frame = self.text, type = 'text', startValue = 0, endValue = 1, duration = 0.5, delay = 0 },
+--   }, 'alpha', self.bar:GetAlpha(), 0, 0.5)
 
 VH_ANIM_PROPS = {
   alpha = "alpha",
@@ -123,6 +129,23 @@ VH_ANIM_PROPS = {
 }
 
 VH_ANIM_PROP_FNS = {
+  scale = {
+    get = function(frame)
+      return frame:GetScale()
+    end,
+    set = function(frame, value)
+      return frame:SetScale(value)
+    end,
+  },
+  -- TODO: 'timetext' should be 'value' and resolved by the anim function
+  timetext = {
+    get = function(frame)
+      return frame:GetText()
+    end,
+    set = function(frame, value)
+      return frame:SetFormattedText("%.1f", value)
+    end,
+  },
   value = {
     get = function(frame)
       return frame:GetValue()
@@ -235,12 +258,22 @@ function AnimateGroup(name, children, property, startValue, endValue, duration, 
   SetChildren(children, startValue, setFn)
 
   local elapsed = 0
+  local accumulator = 0
   local delta = endValue - startValue
+  local speedLimit = 0.025
 
   AnimationGroups[name]:SetScript('OnUpdate', function(self, sinceLastUpdate)
     elapsed = elapsed + sinceLastUpdate
+    accumulator = accumulator + sinceLastUpdate
+    if accumulator < speedLimit then
+      return true
+    else
+      accumulator = 0
+    end
+
     if elapsed > duration then
       if callback then callback() end
+      SetChildren(children, endValue, setFn)
       
       -- clear the frame from the pool
       self:Hide()
