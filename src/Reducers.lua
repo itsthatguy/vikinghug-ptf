@@ -86,8 +86,8 @@ function Reducer(stateName, action)
     end
 
     newState['text'] =
-      GetDifficultyColorText(level) ..
-      ((tonumber(level) > 0) and msg or "??") .. "|r " .. name
+      name .. " " ..
+      GetDifficultyColorText(level) .. ((tonumber(level) > 0) and msg or "??")
 
     newState['name'] = name
     newState['level'] = level
