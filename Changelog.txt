@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4] - 2019-11-06
+
+### Added
+
+- Player Cast bar, timer, name
+- Player frame dividers for mp6/castbar
+- More animations
+- Speed limit for animations
+
+### Changed
+
+- Target text now reads "Name Level"
+
+### Fixed
+
+- Warrior icon texture now has an alpha
+
 ## [0.0.3] - 2019-11-06
 
 ### Added
