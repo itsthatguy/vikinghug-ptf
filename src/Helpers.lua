@@ -104,3 +104,152 @@ function inheritsFrom( baseClass )
   
   return new_class
 end
+
+--
+--
+-- CUSTOM ANIMATION LIBRARY
+-- TODO:
+--   - Move to a proper library
+--   - Animation groups should be able to animate multiple properties
+--
+
+VH_ANIM_PROPS = {
+  alpha = "alpha",
+  height = "height",
+  width = "width",
+  x = "x",
+  y = "y",
+  color = "color",
+}
+
+VH_ANIM_PROP_FNS = {
+  value = {
+    get = function(frame)
+      return frame:GetValue()
+    end,
+    set = function(frame, value)
+      return frame:SetValue(value)
+    end,
+  },
+  alpha = {
+    get = function(frame)
+      return frame:GetAlpha()
+    end,
+    set = function(frame, value)
+      return frame:SetAlpha(value)
+    end,
+  },
+  height = {
+    get = function(frame)
+      return frame:GetHeight()
+    end,
+    set = function(frame, value)
+      return frame:SetHeight(value)
+    end,
+  },
+  width = {
+    get = function(frame)
+      return frame:GetWidth()
+    end,
+    set = function(frame, value)
+      return frame:SetWidth(value)
+    end,
+  },
+  x = {
+    get = function(frame)
+      local point, relativeTo, relativePoint, xofs, yofs = frame:GetPoint()
+      return xofs
+    end,
+    set = function(frame, value)
+      local point, relativeTo, relativePoint, xofs, yofs = frame:GetPoint()
+      return frame:SetPoint(point, relativeTo, relativePoint, value, yofs)
+    end,
+  },
+  y = {
+    get = function(frame)
+      local point, relativeTo, relativePoint, xofs, yofs = frame:GetPoint()
+      return yofs
+    end,
+
+    set = function(frame, value)
+      local point, relativeTo, relativePoint, xofs, yofs = frame:GetPoint()
+      return frame:SetPoint(point, relativeTo, relativePoint, xofs, value)
+    end,
+  },
+  color = {
+    get = function(frame)
+      local frameType = frame:GetObjectType()
+      if (frameType == "StatusBar") then
+        local texture = frame:GetStatusBarTexture()
+        local r,g,b,a = texture:GetVertexColor()
+        return r,g,b,a
+
+      elseif (frameType == "FontString") then
+        local r,g,b,a = frame:GetTextColor()
+        return r,g,b,a
+
+      elseif (frameType == "Texture") then
+        local r,g,b,a = frame:GetVertexColor()
+        return r,g,b,a
+      end
+    end,
+
+    set = function(frame, r, g, b, a)
+      local frameType = frame:GetObjectType()
+
+      if (frameType == "StatusBar") then
+        local texture = frame:GetStatusBarTexture()
+        return texture:SetVertexColor(r, g, b, a)
+
+      elseif (frameType == "FontString") then
+        return frame:SetTextColor(r, g, b, a)
+
+      elseif (frameType == "Texture") then
+        return frame:SetVertexColor(r, g, b, a)
+      end
+    end
+  },
+}
+
+local function SetChildren(children, value, fn)
+  for i,child in pairs(children) do
+    if child:IsShown() ~= true then child:Show() end
+    fn(child, value)
+  end
+end
+
+local AnimationGroups = {}
+
+function AnimateGroup(name, children, property, startValue, endValue, duration, callback)
+  if AnimationGroups[name] and AnimationGroups[name].used then
+    AnimationGroups[name]:Hide()
+    AnimationGroups[name].used = nil
+  end
+  
+  AnimationGroups[name] = CreateFrame("Frame", "VH:ANIM_FRAME_" .. name, UIParent)
+  AnimationGroups[name].used = true
+
+  -- local getFn = VH_ANIM_PROP_FNS[property].get
+  local setFn = VH_ANIM_PROP_FNS[property].set
+
+  SetChildren(children, startValue, setFn)
+
+  local elapsed = 0
+  local delta = endValue - startValue
+
+  AnimationGroups[name]:SetScript('OnUpdate', function(self, sinceLastUpdate)
+    elapsed = elapsed + sinceLastUpdate
+    if elapsed > duration then
+      if callback then callback() end
+      
+      -- clear the frame from the pool
+      self:Hide()
+      self.used = false
+      return true
+    end
+    local progress = min(elapsed / duration, 1)
+    local latest = startValue + progress * delta
+
+    SetChildren(children, latest, setFn)
+  end)
+end

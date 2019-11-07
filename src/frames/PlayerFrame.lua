@@ -3,7 +3,6 @@ local VHPlayerFrame = {}
 -- target frames
 function VHPlayerFrame:init()
   self.frame, self.controller = self:CreateContainer()
-  FOOBAR = self
   self:CreateBars()
   self:CreateEvents(self.frame)
 
@@ -12,7 +11,8 @@ function VHPlayerFrame:init()
 
   self.playerPowerTextFrame = self.PlayerPowerText:create()
   self.playerPowerTextFrame:init()
-  -- self.playerHealthTextFrame = self.PlayerHealthText:create()
+
+  self:CreateMP6()
 end
 
 function VHPlayerFrame:CreateContainer() 
@@ -57,17 +57,6 @@ function VHPlayerFrame:CreateText()
   self:CreatePowerText()
 end
 
-
-
--- function VHPlayerFrame:UpdatePowerText(event, state, this)
---   local _self = this ~= nil and this or self
-
---   _self.textCurrent:SetText("|cffffffff" .. tostring(state.power))
---   _self.textMax:SetText("|cffffffff" .. tostring(state.powerMax))
-  
---   _self.textDivider:SetPoint("BOTTOMRIGHT", "VH_PLAYER_POWER_TEXT_MAX", 10, 6, "BOTTOMLEFT")
--- end
-
 local function HandleEvents(self, event, ...)
   if (event == "UPDATE_SHAPESHIFT_FORM") then
     -- 1 = Bear Form
@@ -97,6 +86,66 @@ function VHPlayerFrame:CreateEvents(frame)
   frame:RegisterEvent("UNIT_HEALTH", "player")
   frame:RegisterEvent("UNIT_POWER_UPDATE", "player")
   frame:RegisterEvent('PLAYER_ENTERING_WORLD')
+end
+
+
+--
+--
+-- MP6 Bar
+-- TODO: MOVE THIS
+--
+function VHPlayerFrame:CreateMP6()
+  local frameName = "VH_MP6_FRAME"
+  local mp6Frame = CreateFrame("Frame", frameName, UIParent)
+  mp6Frame:SetSize(1, 1)
+  mp6Frame:SetPoint("TOPLEFT", self.frame, "TOP", 20, 0)
+
+   -- bar
+  mp6Frame.bar = CreateFrame('StatusBar', "VH_MP6_BAR", mp6Frame)
+  mp6Frame.bar:SetPoint("TOPLEFT", frameName, "TOPLEFT", 0, 0)
+  
+  -- Style it
+  mp6Frame.bar:SetSize(8, 60)
+  mp6Frame.bar:SetStatusBarTexture(VH_TEXTURES.SOLID)
+  mp6Frame.bar:SetBackdrop({ bgFile = VH_TEXTURES.SOLID })
+  mp6Frame.bar:SetBackdropColor(ParseColor(VH_COLORS.BG, 0.6))
+  mp6Frame.bar:SetStatusBarColor(ParseColor(VH_COLORS.YELLOW, 1))
+  
+  mp6Frame.bar:SetOrientation('VERTICAL')
+  mp6Frame.bar:SetMinMaxValues(0, 1)
+
+
+  mp6Frame.running = false
+  mp6Frame.limit = 0.05
+  mp6Frame.endTime = 0
+
+  mp6Frame:Hide()
+  mp6Frame.bar:Hide()
+
+  mp6Frame:RegisterEvent("CURRENT_SPELL_CAST_CHANGED")
+  mp6Frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+  mp6Frame:SetScript("OnEvent", function(self, event, arg2, ...)
+    if (event == "UNIT_SPELLCAST_SUCCEEDED") then
+      self.endTime = GetTime() + 6
+      self:Show()
+
+      AnimateGroup("MP6_BAR_VALUE", {self.bar}, 'value', 1, 0, 6, function()
+        -- Reuse the same animation group name, as to kill the old animation
+        AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 1, 0, 0.5, function()
+          self.bar:Hide()
+          self:Hide()
+        end)
+      end)
+      AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 0, 1, 0.5)
+
+    -- NOTE: Why did I have this?
+    -- elseif (event == "CURRENT_SPELL_CAST_CHANGED") then
+    --   self.castChangeCount = self.castChangeCount + 1
+    --   if (self.castChangeCount > 2) then
+    --     self.castChangeCount = 0
+    --   end
+    end
+  end)
 end
 
 Vikinghug.PlayerFrame = VHPlayerFrame
