@@ -150,24 +150,39 @@ function VHPlayerFrame:CreateCastbar()
   castFrame:Hide()
   castFrame.bar:Hide()
 
+  castFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
   castFrame:RegisterEvent("UNIT_SPELLCAST_START", "player")
   castFrame:RegisterEvent("UNIT_SPELLCAST_STOP", "player")
+  castFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
   castFrame:SetScript("OnEvent", function(self, event, arg2, arg, spellID)
-    local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = CastingInfo("player")
-    if (event == "UNIT_SPELLCAST_START") then
+    local channeling = (event == "UNIT_SPELLCAST_CHANNEL_START")
+
+    if (event == "UNIT_SPELLCAST_START" or channeling) then
+      local info = (channeling) and ChannelInfo or CastingInfo
+      local name, _, _, startTimeMS, endTimeMS = info("player")
       local duration = (endTimeMS - startTimeMS) / 1000
       self.bar:SetMinMaxValues(0, duration)
       self:Show()
       self.nameText:SetText(name)
+
+      -- Animations
       AnimateGroup("CAST_BAR_ALPHA", {self.bar}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
-      AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value', 0, duration, duration)
-      AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext', 0, duration, duration)
+      AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value',
+        channeling and duration or 0,
+        channeling and 0 or duration,
+        duration
+      )
+      AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext',
+        channeling and duration or 0,
+        channeling and 0 or duration,
+        duration
+      )
       AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
       AnimateGroup("CAST_BAR_TEXT_Y", {self.text}, 'y', -14, -4, 0.1)
       AnimateGroup("CAST_BAR_NAME_TEXT_Y", {self.nameText}, 'y', -25, -30, 0.15)
       AnimateGroup("CAST_BAR_NAME_TEXT_HEIGHT", {self.nameText}, 'scale', 0.7, 1, 0.05)
 
-    elseif (event == "UNIT_SPELLCAST_STOP") then
+    elseif (event == "UNIT_SPELLCAST_STOP" or "UNIT_SPELLCAST_CHANNEL_STOP") then
       AnimateGroup("CAST_BAR_ALPHA", {self.bar}, 'alpha', self.bar:GetAlpha(), 0, 0.25)
       AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 0, 0.25)
     end
