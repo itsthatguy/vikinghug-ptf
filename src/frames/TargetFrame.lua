@@ -22,7 +22,7 @@ function VHTargetFrame:CreateContainer()
   targetFrame:SetPoint("BOTTOM", VH_FRAMES.PLAYER_FRAME, "TOP", 0, 5)
   targetFrame:SetSize(900, 30)
 
-  local targetFrameController = CreateFrame("Button", VH_FRAMES.TARGET_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
+  local targetFrameController = CreateFrame("Frame", VH_FRAMES.TARGET_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
   targetFrameController:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 245)
   targetFrameController:SetSize(600, 30)
 
