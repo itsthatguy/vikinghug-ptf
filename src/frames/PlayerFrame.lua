@@ -39,7 +39,7 @@ function VHPlayerFrame:CreateContainer()
   playerFrame:SetSize(900, 30)
 
   local playerFrameController = CreateFrame("Button", VH_FRAMES.PLAYER_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
-  playerFrameController:SetPoint("TOP", UIParent, "BOTTOM", 0, 200)
+  playerFrameController:SetPoint("TOP", VH_FRAMES.PLAYER_FRAME, "TOP", 0, 0)
   playerFrameController:SetSize(500, 30)
 
   playerFrameController:SetAttribute("unit", "player")

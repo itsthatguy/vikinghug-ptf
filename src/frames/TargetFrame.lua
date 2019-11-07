@@ -22,9 +22,9 @@ function VHTargetFrame:CreateContainer()
   targetFrame:SetPoint("BOTTOM", VH_FRAMES.PLAYER_FRAME, "TOP", 0, 5)
   targetFrame:SetSize(900, 30)
 
-  local targetFrameController = CreateFrame("Frame", VH_FRAMES.TARGET_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
-  targetFrameController:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 245)
-  targetFrameController:SetSize(600, 30)
+  local targetFrameController = CreateFrame("Button", VH_FRAMES.TARGET_FRAME .. "_CONTROLLER", nil, "SecureActionButtonTemplate")
+  targetFrameController:SetPoint("BOTTOM", VH_FRAMES.TARGET_FRAME, "BOTTOM", 0, 0)
+  targetFrameController:SetSize(420, 30)
 
   targetFrameController:SetAttribute("unit", "target")
   targetFrameController:EnableMouse(true)
@@ -33,9 +33,9 @@ function VHTargetFrame:CreateContainer()
   targetFrameController:SetAttribute("type2", "togglemenu")
 
   -- remove this start
-  -- local texture = targetFrameController:CreateTexture(nil, "BACKGROUND")
-  -- texture:SetAllPoints()
-  -- texture:SetColorTexture(1,1,1,.2)
+  local texture = targetFrameController:CreateTexture(nil, "BACKGROUND")
+  texture:SetAllPoints()
+  texture:SetColorTexture(1,1,1,.2)
   -- remove this end
 
   return targetFrame, targetFrameController
