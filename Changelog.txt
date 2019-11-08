@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Adds new fonts
+- Adds masque skin (when available)
+- Changes font and colors on action bars
+
+### Changed
+
+- Uses a new font for unit frame text
+
 ### Fixed
 
 - Adds channeling to castbar
+- Only show mp6* bar after finishing channeling
+- Fixes castbar time when spell/channel is modified by attack
 
 ## [0.0.5] - 2019-11-06
 
