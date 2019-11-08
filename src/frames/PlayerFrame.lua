@@ -217,10 +217,12 @@ function VHPlayerFrame:CreateMP6()
   mp6Frame:Hide()
   mp6Frame.bar:Hide()
 
+  -- TODO: Don't show MP6 until finished channeling
+  mp6Frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
   mp6Frame:RegisterEvent("CURRENT_SPELL_CAST_CHANGED")
   mp6Frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
   mp6Frame:SetScript("OnEvent", function(self, event, arg2, ...)
-    if (event == "UNIT_SPELLCAST_SUCCEEDED") then
+    if (event == "UNIT_SPELLCAST_SUCCEEDED" and UnitChannelInfo("player") == nil) then
       self.endTime = GetTime() + 6
       self:Show()
 
@@ -239,6 +241,18 @@ function VHPlayerFrame:CreateMP6()
     --   if (self.castChangeCount > 2) then
     --     self.castChangeCount = 0
     --   end
+    elseif (event == "UNIT_SPELLCAST_CHANNEL_STOP") then
+      self.endTime = GetTime() + 6
+      self:Show()
+
+      AnimateGroup("MP6_BAR_VALUE", {self.bar}, 'value', 1, 0, 6, function()
+        -- Reuse the same animation group name, as to kill the old animation
+        AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 1, 0, 0.15, function()
+          self.bar:Hide()
+          self:Hide()
+        end)
+      end)
+      AnimateGroup("MP6_BAR", {self.bar}, 'alpha', 0, 1, 0.25)
     end
   end)
 end
