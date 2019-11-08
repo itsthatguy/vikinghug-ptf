@@ -152,29 +152,54 @@ function VHPlayerFrame:CreateCastbar()
 
   castFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
   castFrame:RegisterEvent("UNIT_SPELLCAST_START", "player")
+  castFrame:RegisterEvent("UNIT_SPELLCAST_DELAYED", "player")
+  castFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", "player")
   castFrame:RegisterEvent("UNIT_SPELLCAST_STOP", "player")
   castFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
   castFrame:SetScript("OnEvent", function(self, event, arg2, arg, spellID)
-    local channeling = (event == "UNIT_SPELLCAST_CHANNEL_START")
+    local channelUpdate = (event == "UNIT_SPELLCAST_CHANNEL_UPDATE")
+    local channelStart = (event == "UNIT_SPELLCAST_CHANNEL_START")
+    local delayed = (event == "UNIT_SPELLCAST_DELAYED")
 
-    if (event == "UNIT_SPELLCAST_START" or channeling) then
-      local info = (channeling) and ChannelInfo or CastingInfo
+      -- Animations
+    if (delayed == true or channelUpdate == true) then
+      local info = (channelUpdate) and ChannelInfo or CastingInfo
+      local _, _, _, startTimeMS, endTimeMS = info("player")
+      local duration = (endTimeMS - startTimeMS) / 1000
+      local startValue = channelUpdate and (endTimeMS / 1000) - GetTime() or GetTime() - (startTimeMS / 1000)
+      local endValue = channelUpdate and 0 or duration
+
+      AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value',
+        startValue,
+        endValue,
+        channelUpdate and startValue or duration - startValue
+      )
+      AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext',
+        startValue,
+        endValue,
+        channelUpdate and startValue or duration - startValue
+      )
+
+    elseif (event == "UNIT_SPELLCAST_START" or channelStart) then
+      local info = (channelStart) and ChannelInfo or CastingInfo
       local name, _, _, startTimeMS, endTimeMS = info("player")
       local duration = (endTimeMS - startTimeMS) / 1000
+      local startValue = channelStart and duration or 0
+      local endValue = channelStart and 0 or duration
+
       self.bar:SetMinMaxValues(0, duration)
       self:Show()
       self.nameText:SetText(name)
 
-      -- Animations
       AnimateGroup("CAST_BAR_ALPHA", {self.bar}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
       AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value',
-        channeling and duration or 0,
-        channeling and 0 or duration,
+        startValue,
+        endValue,
         duration
       )
       AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext',
-        channeling and duration or 0,
-        channeling and 0 or duration,
+        startValue,
+        endValue,
         duration
       )
       AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
