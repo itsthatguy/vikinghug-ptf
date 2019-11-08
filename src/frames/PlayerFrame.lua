@@ -132,7 +132,7 @@ function VHPlayerFrame:CreateCastbar()
   castFrame.bar:SetMinMaxValues(0, 1)
 
   castFrame.text = castFrame:CreateFontString("VH_CAST_TEXT")
-  castFrame.text:SetFont(VH_FONTS.FORCED_SQUARE, 20)
+  castFrame.text:SetFont(VH_FONTS.STAATLICHES, 20)
   castFrame.text:SetJustifyH("CENTER")
   castFrame.text:SetPoint("TOP", self.frame, "BOTTOM", 0, -4)
   castFrame.text:SetText(12345)
@@ -140,7 +140,7 @@ function VHPlayerFrame:CreateCastbar()
   CFT = castFrame.text
 
   castFrame.nameText = castFrame:CreateFontString("VH_CAST_NAME_TEXT")
-  castFrame.nameText:SetFont(VH_FONTS.FORCED_SQUARE, 32)
+  castFrame.nameText:SetFont(VH_FONTS.STAATLICHES, 32)
   castFrame.nameText:SetJustifyH("CENTER")
   castFrame.nameText:SetPoint("TOP", self.frame, "BOTTOM", 0, -30)
   castFrame.nameText:SetText(12345)
@@ -282,4 +282,4 @@ function VHPlayerFrame:CreateMP6()
   end)
 end
 
-  Vikinghug.PlayerFrame = VHPlayerFrame
+Vikinghug.PlayerFrame = VHPlayerFrame

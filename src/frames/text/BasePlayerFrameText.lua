@@ -22,7 +22,7 @@ function VHBasePlayerFrameText:CreateTextFrame(options)
   --
   -- TEXT MAX
   textFrame.textMax = textFrame:CreateFontString(frameName .. "_MAX")
-  textFrame.textMax:SetFont(VH_FONTS.FORCED_SQUARE, 38.1)
+  textFrame.textMax:SetFont(VH_FONTS.STAATLICHES, 38.1)
   textFrame.textMax:SetJustifyH(reverseDirection)
   textFrame.textMax:SetText("0000")
   textFrame.textMax:SetPoint("BOTTOM" .. reverseDirection, frameName, "BOTTOM" .. direction, dirMod * 10, -8)
@@ -44,7 +44,7 @@ function VHBasePlayerFrameText:CreateTextFrame(options)
   --
   -- TEXT CURRENT
   textFrame.textCurrent = textFrame:CreateFontString(frameName .. "_CURRENT")
-  textFrame.textCurrent:SetFont(VH_FONTS.FORCED_SQUARE, 55)
+  textFrame.textCurrent:SetFont(VH_FONTS.STAATLICHES, 55)
   textFrame.textCurrent:SetJustifyH(reverseDirection)
   textFrame.textCurrent:SetText("0")
   textFrame.textCurrent:SetPoint("BOTTOM" .. reverseDirection, frameName .. "_DIVIDER", "BOTTOM" .. direction, dirMod * 10, -11)

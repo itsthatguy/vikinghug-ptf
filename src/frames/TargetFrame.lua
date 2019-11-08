@@ -104,7 +104,7 @@ function VHTargetFrame:CreateText()
   textFrame:SetPoint("BOTTOMRIGHT", VH_FRAMES.TARGET_FRAME, "BOTTOM", -40, 15)
 
   textFrame.text = textFrame:CreateFontString("VH_TARGET_TEXT_FRAME")
-  textFrame.text:SetFont(VH_FONTS.FORCED_SQUARE, 20)
+  textFrame.text:SetFont(VH_FONTS.STAATLICHES, 20)
   textFrame.text:SetJustifyH("RIGHT")
   textFrame.text:SetPoint("BOTTOMRIGHT", "VH_TARGET_TEXT_FRAME", 0, 5)
 
