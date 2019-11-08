@@ -247,6 +247,7 @@ function AnimateGroup(name, children, property, startValue, endValue, duration, 
   if AnimationGroups[name] and AnimationGroups[name].used then
     AnimationGroups[name]:Hide()
     AnimationGroups[name].used = nil
+    AnimationGroups[name] = nil
   end
   
   AnimationGroups[name] = CreateFrame("Frame", "VH:ANIM_FRAME_" .. name, UIParent)
@@ -272,12 +273,13 @@ function AnimateGroup(name, children, property, startValue, endValue, duration, 
     end
 
     if elapsed > duration then
-      if callback then callback() end
       SetChildren(children, endValue, setFn)
+      if callback then callback() end
       
       -- clear the frame from the pool
       self:Hide()
       self.used = false
+      self = nil
       return true
     end
     local progress = min(elapsed / duration, 1)

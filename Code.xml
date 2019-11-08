@@ -9,4 +9,5 @@
     <Script file="src\frames\TargetFrame.lua" />
     <Include file="src\frames\bars\Bars.xml"/>
     <Include file="src\frames\Text\Text.xml"/>
+    <Script file="src\masque_skin\masque.lua"/>
 </Ui>
