@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds new fonts
 - Adds masque skin (when available)
 - Changes font and colors on action bars
+- Hide the blizzard player/target frame
 
 ### Changed
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds channeling to castbar
 - Only show mp6* bar after finishing channeling
 - Fixes castbar time when spell/channel is modified by attack
+- Fixes cast and channel bar to always count down
 
 ## [0.0.5] - 2019-11-06
 
