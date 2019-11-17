@@ -2,6 +2,9 @@ local VHPlayerFrame = {}
 
 -- target frames
 function VHPlayerFrame:init()
+  PlayerFrame:SetScript("OnEvent", nil);
+  PlayerFrame:Hide();
+
   self.frame, self.controller = self:CreateContainer()
   self:CreateBars()
   self:CreateEvents(self.frame)
@@ -172,8 +175,8 @@ function VHPlayerFrame:CreateCastbar()
       AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value',
         startValue,
         endValue,
-        channelUpdate and startValue or duration - startValue
-      )
+        channelUpdate and endValue or endValue,
+        channelUpdate and endValue or startValue,
       AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext',
         startValue,
         endValue,
@@ -195,14 +198,17 @@ function VHPlayerFrame:CreateCastbar()
       AnimateGroup("CAST_BAR_VALUE", {self.bar}, 'value',
         startValue,
         endValue,
-        duration
-      )
+        channelUpdate and startValue or endValue,
+        channelUpdate and endValue or startValue,
       AnimateGroup("CAST_BAR_TEXT_VALUE", {self.text}, 'timetext',
         startValue,
         endValue,
         duration
-      )
-      AnimateGroup("CAST_BAR_TEXT_ALPHA", {self.text, self.nameText}, 'alpha', self.bar:GetAlpha(), 1, 0.15)
+      AnimateGroup("CAST_BAR_NAME_TEXT_Y", {self.nameText}, 'y', -55, -62, 0.08)
+      AnimateGroup("CAST_BAR_NAME_TEXT_HEIGHT", {self.nameText}, 'scale', 0.7, 1, 0.08, function()
+        AnimateGroup("CAST_BAR_NAME_TEXT_Y", {self.nameText}, 'y', -62, -60, 0.1)
+        AnimateGroup("CAST_BAR_NAME_TEXT_HEIGHT", {self.nameText}, 'scale', 1, 1, 0.1)
+      end)
       AnimateGroup("CAST_BAR_TEXT_Y", {self.text}, 'y', -14, -4, 0.1)
       AnimateGroup("CAST_BAR_NAME_TEXT_Y", {self.nameText}, 'y', -25, -30, 0.15)
       AnimateGroup("CAST_BAR_NAME_TEXT_HEIGHT", {self.nameText}, 'scale', 0.7, 1, 0.05)
@@ -244,7 +250,7 @@ function VHPlayerFrame:CreateMP6()
 
   -- TODO: Don't show MP6 until finished channeling
   mp6Frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
-  mp6Frame:RegisterEvent("CURRENT_SPELL_CAST_CHANGED")
+    if (event == "UNIT_SPELLCAST_SUCCEEDED" and ChannelInfo("player") == nil) then
   mp6Frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
   mp6Frame:SetScript("OnEvent", function(self, event, arg2, ...)
     if (event == "UNIT_SPELLCAST_SUCCEEDED" and UnitChannelInfo("player") == nil) then

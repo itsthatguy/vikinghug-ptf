@@ -9,9 +9,9 @@ VH_TARGET = "target"
 
 VH_COLORS = {
   RED = { 242, 51, 80 },
-  ORANGE = { 237, 125, 64 },
+  ORANGE = { 242, 115, 45 },
   BLUE = { 47, 151, 247 },
-  GREEN = {},
+  GREEN = { 115, 222, 89 },
   YELLOW = { 237, 197, 64 },
   BG = {30, 11, 38},
 }

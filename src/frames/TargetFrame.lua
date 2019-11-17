@@ -9,6 +9,9 @@ end
 
 -- target frames
 function VHTargetFrame:init()
+  TargetFrame:SetScript("OnEvent", nil);
+  TargetFrame:Hide();
+
   self.frame, self.controller = self:CreateContainer()
   self:CreateBars()
   self:CreateEvents(self.frame)
