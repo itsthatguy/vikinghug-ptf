@@ -85,7 +85,7 @@ function VHTargetCastFrame:CreateText()
   Vikinghug.RegisterCallback(self, VH_ACTIONS.target.updateCast, self.UpdateCast, self)
   Vikinghug.RegisterCallback(self, VH_ACTIONS.target.startCast, self.StartCast, self)
   Vikinghug.RegisterCallback(self, VH_ACTIONS.target.stopCast, self.StopCast, self)
-  Vikinghug.RegisterCallback(self, VH_ACTIONS.target.clearTarget, self.StopCast, self)
+  Vikinghug.RegisterCallback(self, VH_ACTIONS.target.clearTarget, self.ClearTarget, self)
 end
 
 function VHTargetCastFrame:StartCast(event, state)
@@ -109,6 +109,11 @@ function VHTargetCastFrame:UpdateCast(event, state)
     state.castEnd,
     state.castDuration
   )
+end
+
+function VHTargetCastFrame:ClearTarget(event, state)
+  self:Hide()
+  self.castBar:Hide()
 end
 
 function VHTargetCastFrame:Show()

@@ -18,8 +18,6 @@ function VHPlayerFrame:init()
   self:CreateDividers()
 
   self.playerCastFrame = Vikinghug.PlayerCastFrame:init()
-  -- self:CreateCastbar()
-  -- VHPlayerBuffs:CreateBuffFrame()
 end
 
 function VHPlayerFrame:CreateDividers()
