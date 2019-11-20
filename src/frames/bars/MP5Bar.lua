@@ -21,10 +21,9 @@ end
 function MP5Bar:StartMP5(event, state)
   self.bar:SetMinMaxValues(0, 5)
   self:Show()
-  AnimateGroup(self.unit.."_MP5_BAR_VALUE", {self.bar}, 'value', 5, 0, 5)
+  AnimateGroup(self.unit.."_MP5_BAR_VALUE", {self.bar}, 'value', 5, 0, 5, function()
+    self:Hide()
+  end)
 end
-
--- function MP5Bar:StopMP5(event, state)
--- end
 
 Vikinghug.MP5Bar = MP5Bar

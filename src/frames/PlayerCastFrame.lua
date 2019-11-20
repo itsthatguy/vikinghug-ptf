@@ -2,7 +2,6 @@ local VHPlayerCastFrame = {}
 
 -- target frames
 function VHPlayerCastFrame:init()
-  print("VHPlayerCastFrame:init")
   self.frame = self:CreateContainer()
   self:CreateBars()
   self:CreateText()
@@ -52,13 +51,14 @@ function VHPlayerCastFrame:CreateText()
   self.text:SetJustifyH("CENTER")
   self.text:SetPoint(text.point, text.relativeFrame, text.relativePoint, text.x, text.y)
   self.text:SetText(12345)
-  self.text:Hide()
 
   self.nameText = self.frame:CreateFontString("VH_PLAYER_CAST_NAME_TEXT")
   self.nameText:SetFont(VH_FONTS.STAATLICHES, nameText.textSize)
   self.nameText:SetJustifyH("CENTER")
   self.nameText:SetPoint(nameText.point, nameText.relativeFrame, nameText.relativePoint, nameText.x, nameText.y)
   self.nameText:SetText(12345)
+
+  self:Hide()
 
   Vikinghug.RegisterCallback(self, VH_ACTIONS.player.updateCast, self.UpdateCast, self)
   Vikinghug.RegisterCallback(self, VH_ACTIONS.player.startCast, self.StartCast, self)

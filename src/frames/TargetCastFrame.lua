@@ -2,7 +2,6 @@ local VHTargetCastFrame = {}
 
 -- target frames
 function VHTargetCastFrame:init()
-  print("VHTargetCastFrame:init")
   self.frame = self:CreateContainer()
   self.castBar = self:CreateBars()
   self:CreateText()
@@ -81,9 +80,7 @@ function VHTargetCastFrame:CreateText()
   )
   self.nameText:SetText(12345)
 
-  self.castBar.bar:Hide()
-  self.text:Hide()
-  self.nameText:Hide()
+  self:Hide()
 
   Vikinghug.RegisterCallback(self, VH_ACTIONS.target.updateCast, self.UpdateCast, self)
   Vikinghug.RegisterCallback(self, VH_ACTIONS.target.startCast, self.StartCast, self)
