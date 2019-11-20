@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7] - 2019-11-17
+
+### Changed
+
+- Refactors Cast and MP5 bars into their own classes
+
+### Fixed
+
+- Minor fixes to hide/show of cast elements
+- Hide target castbar when changing targets
 
 ## [0.0.6] - 2019-11-17
 

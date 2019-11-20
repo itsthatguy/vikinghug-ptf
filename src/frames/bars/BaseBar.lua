@@ -29,35 +29,35 @@ function BaseBar:init(unit, name, type, color, positions)
   -- bar:EnableMouse(true)
   -- bar:RegisterForDrag("LeftButton", "RightButton")
   -- bar:SetScript("OnDragStart", bar.StartMoving)
-  -- bar:SetScript("OnDragStop", bar.StopMovingOrSizing) 
+  -- bar:SetScript("OnDragStop", bar.StopMovingOrSizing)
 
-  local reverseFill = positions.align == "RIGHT" 
-  if reverseFill then self.bar:SetReverseFill(true) end
+  if positions.reverseFill then self.bar:SetReverseFill(true) end
 
-  local x = (reverseFill and (-1 * positions.x) or positions.x)
-  
+  -- TODO: THIS IS WHACK, AND NEEDS TO BE REMOVED
+  local x = (positions.reverseFill and (-1 * positions.x) or positions.x)
+
   self:SetHeight(0)
   self.bar:SetPoint(positions.point, positions.relativeFrame, positions.relativePoint, x, positions.y)
   self:SetHeight(positions.height)
-  
+
   -- Style it
   self.bar:SetSize(positions.width, positions.height)
   self.bar:SetBackdrop({ bgFile = VH_TEXTURES.SOLID })
   self.bar:SetStatusBarTexture(VH_TEXTURES.SOLID, 'ARTWORK') -- Background image
-  self.bar:SetOrientation('HORIZONTAL')
+  self.bar:SetOrientation(positions.orientation or 'HORIZONTAL')
   self.bar:SetBackdropColor(ParseColor(VH_COLORS.BG, 0.6))
-  
-  local fill = self.bar:GetStatusBarTexture()
-  fill:SetVertexColor(ParseColor(color)) 
 
-  self:CreateEvents()
-  
+  local fill = self.bar:GetStatusBarTexture()
+  fill:SetVertexColor(ParseColor(color))
+
   self.bar:SetScript('OnUpdate', function()
     local limit = 30 / GetFramerate()
     self:AnimateValue(limit)
     self:AnimateHeight(limit)
     self:AnimateAlpha(limit)
   end)
+
+  self:CreateEvents()
 end
 
 
@@ -83,8 +83,8 @@ function BaseBar:AnimateValue(limit)
     return
   end
 
-  local speed = 9  
-  local new = cur + min((self.value-cur)/speed, max(self.value-cur, limit)) 
+  local speed = 9
+  local new = cur + min((self.value-cur)/speed, max(self.value-cur, limit))
   if new ~= new then
     -- Mad hax to prevent QNAN.
     new = self.value

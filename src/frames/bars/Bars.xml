@@ -4,4 +4,6 @@
   <Script file="HealthBar.lua"/>
   <Script file="ManaBar.lua"/>
   <Script file="RageBar.lua"/>
+  <Script file="CastBar.lua"/>
+  <Script file="MP5Bar.lua"/>
 </Ui>
