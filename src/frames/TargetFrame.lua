@@ -9,11 +9,15 @@ end
 
 -- target frames
 function VHTargetFrame:init()
+  TargetFrame:SetScript("OnEvent", nil);
+  TargetFrame:Hide();
+
   self.frame, self.controller = self:CreateContainer()
   self:CreateBars()
   self:CreateEvents(self.frame)
   self:CreateText()
   self:CreateClassIcon(self.textFrame)
+  self.targetCastFrame = Vikinghug.TargetCastFrame:init()
 end
 
 
@@ -128,9 +132,11 @@ function VHTargetFrame:UpdateTargetText(event, state, this)
   if (UnitIsPlayer("target") and classId ~= nil) then
     self.classIconFrame.texture:Show()
     self.classIconFrame.texture:SetTexture(VH_TEXTURES[classId .. "_ICON"])
+    self.classIconFrame.bgTexture:SetTexture(VH_TEXTURES[classId .. "_ICON"])
     -- self.classIconFrame.texture:SetTexture(VH_TEXTURES["SHAMAN_ICON"])
   else
     self.classIconFrame.texture:Hide()
+    self.classIconFrame.bgTexture:Hide()
   end
 
   self.textFrame.text:SetText(state.text)
@@ -152,19 +158,24 @@ function VHTargetFrame:CreateClassIcon(parent)
   classIconFrame:SetPoint("BOTTOM", "VH_TARGET_FRAME", "BOTTOM", 0, 0)
   classIconFrame:SetSize(52, 52)
 
+  local bgTexture = classIconFrame:CreateTexture(nil, "BACKGROUND")
+  -- bgTexture:SetAllPoints()
+  bgTexture:SetSize(54, 54)
+  bgTexture:SetTexture(VH_TEXTURES.DRUID_ICON)
+  bgTexture:SetVertexColor(ParseColor(VH_COLORS.BG, 0.5))
+  bgTexture:SetPoint("TOP", "VH_TARGET_CLASS_ICON", "TOP", 0, -1)
 
-  -- remove this start
   local texture = classIconFrame:CreateTexture(nil, "BACKGROUND")
   texture:SetAllPoints()
   texture:SetTexture(VH_TEXTURES.DRUID_ICON)
--- texture:SetTexture(VH_TEXTURES.WARLOCK_ICON)
--- remove this end
+
 
   classIconFrame.texture = texture
+  classIconFrame.bgTexture = bgTexture
   self.classIconFrame = classIconFrame
 end
 
--- CLASS ICON
+-- CLASS ICON END
 --
 -------------------------------------------------------------------------
 
