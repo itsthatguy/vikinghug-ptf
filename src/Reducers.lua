@@ -12,6 +12,11 @@ VH_STATE = {
     energyMax = UnitPowerMax("player", 3),
     rage = UnitPower("player", 1),
     rageMax = UnitPowerMax("player", 1),
+    castIsChannel = nil,
+    castStart = 0,
+    castEnd = 10,
+    castDuration = 0,
+    castName = nil,
   },
 
   target = {
@@ -30,6 +35,11 @@ VH_STATE = {
     name = UnitName("target"),
     level = UnitLevel("target"),
     classification = UnitLevel("classification"),
+    castIsChannel = nil,
+    castStart = 0,
+    castEnd = 10,
+    castDuration = 0,
+    castName = nil,
     text = ""
   }
 }
@@ -62,6 +72,43 @@ function Reducer(stateName, action)
 
     Vikinghug.callbacks:Fire(actions.updatePower, newState)
     Vikinghug.callbacks:Fire(actions.configureBars, newState)
+
+  elseif (action.type == "START_CAST") then
+    local isChanneling = action.castType == "CHANNELING"
+    local infoFn = isChanneling and ChannelInfo or CastingInfo
+
+    local name, _, _, startTimeMS, endTimeMS = infoFn(newState.unit)
+    local duration = (endTimeMS - startTimeMS) / 1000
+    local startValue = isChanneling and duration or 0
+    local endValue = isChanneling and 0 or duration
+
+    newState['castIsChannel'] = isChanneling
+    newState['castStart'] = startValue
+    newState['castEnd'] =  endValue
+    newState['castDuration'] = duration
+    newState['castName'] = name
+
+    Vikinghug.callbacks:Fire(actions.startCast, newState)
+
+  elseif (action.type == "SET_CAST_FROM_INTERRUPT") then
+    local isChanneling = action.castType == "CHANNELING"
+    local infoFn = isChanneling and ChannelInfo or CastingInfo
+
+    local name, _, _, startTimeMS, endTimeMS = infoFn(newState.unit)
+    local duration = (endTimeMS - startTimeMS) / 1000
+    local startValue = isChanneling and (endTimeMS / 1000) - GetTime() or GetTime() - (startTimeMS / 1000)
+    local endValue = isChanneling and 0 or duration
+
+    newState['castIsChannel'] = isChanneling
+    newState['castStart'] = startValue
+    newState['castEnd'] =  endValue
+    newState['castDuration'] = isChanneling and startValue or duration - startValue
+    newState['castName'] = name
+
+    Vikinghug.callbacks:Fire(actions.updateCast, newState)
+
+  elseif (action.type == "STOP_CAST") then
+    Vikinghug.callbacks:Fire(actions.stopCast, newState)
 
   elseif (action.type == "SET_TARGET") then
     if (UnitExists(newState.unit) == false) then

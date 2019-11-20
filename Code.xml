@@ -5,9 +5,6 @@
     <Script file="src\Helpers.lua" />
     <Script file="src\Actions.lua" />
     <Script file="src\Reducers.lua" />
-    <Script file="src\frames\PlayerFrame.lua" />
-    <Script file="src\frames\TargetFrame.lua" />
-    <Include file="src\frames\bars\Bars.xml"/>
-    <Include file="src\frames\Text\Text.xml"/>
+    <Include file="src\frames\Frames.xml"/>
     <Script file="src\masque_skin\masque.lua"/>
 </Ui>
