@@ -12,6 +12,7 @@ An EXTREMELY opinionated player & target frame addon for WOW Classic.
 - Target Cast Bar
 - Target Class Icons
 - Supports Druid forms
+- Masque Support
 
 ## In Progress Features
 - Player Buffs
