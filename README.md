@@ -13,6 +13,7 @@ An EXTREMELY opinionated player & target frame addon for WOW Classic.
 - Target Class Icons
 - Supports Druid forms
 - Masque Support
+- LibSharedMedia Support (adds fonts and textures)
 
 ## In Progress Features
 - Player Buffs
